@@ -1,0 +1,9 @@
+filebeat.config:
+  inputs:
+    - type: log
+      paths:
+        - /var/log/*.log
+  modules:
+    - module: apache
+      config:
+        - var: value

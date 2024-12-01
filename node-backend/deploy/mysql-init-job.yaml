@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-init
+spec:
+  template:
+    spec:
+      containers:
+      - name: mysql-init
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "rootpassword" # Replace with your root password
+        command: ["sh", "-c"]
+        args:
+        - |
+          mysql -h mysql -u root -p$MYSQL_ROOT_PASSWORD -e "
+          USE mydatabase;
+          CREATE TABLE IF NOT EXISTS items (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              name VARCHAR(255) NOT NULL,
+              description TEXT,
+              price DECIMAL(10, 2)
+          );
+          INSERT IGNORE INTO items (name, description, price) VALUES
+          ('T-Shirt', 'Comfortable cotton t-shirt', 19.99),
+          ('Jeans', 'Stylish blue jeans', 39.99);
+          "
+      restartPolicy: Never
+  backoffLimit: 4

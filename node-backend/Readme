@@ -1,0 +1,9 @@
+docker build -t jagannathgawali7/elaundry-backend:dev-19-08-2024 .
+docker push jagannathgawali7/elaundry-backend:dev-19-08-2024
+
+
+cd deploy
+kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-service.yaml
+
+kubectl get services

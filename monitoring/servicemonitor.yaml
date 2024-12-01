@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nodejs-app-metrics
+  namespace: ns1  # Use the namespace where Prometheus is installed
+  labels:
+    release: myapp-release  # The label that connects this to the Prometheus instance
+spec:
+  selector:
+    matchLabels:
+      app: backend  # Match the label of the service you want to monitor
+  endpoints:
+  - port: "node-backend-port"        # Port as a string (important change here)
+    path: /metrics       # Path to scrape
+    interval: 15s        # Scrape every 15 seconds
+  namespaceSelector:
+    matchNames:
+      - ns1          # Namespace where the Node.js app is running

@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingress.backend.name }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: {{ .Values.ingress.ui.ingressClass }} #"k8s-triliovault-tvk-nginx" #openshift-default
+  rules:
+  # - host: {{ .Values.ingress.backend.host }}
+  - http:
+      paths:
+      - path: /api/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.ingress.backend.serviceName }}
+            port:
+              number: {{ .Values.ingress.backend.servicePort }}

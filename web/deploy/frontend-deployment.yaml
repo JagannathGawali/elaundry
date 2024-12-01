@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        app1: frontend123
+    spec:
+      containers:
+      - name: frontend
+        image: jagannathgawali7/elaundry-web:dev-24-08-2024
+        ports:
+        - containerPort: 80

@@ -1,0 +1,80 @@
+storageClassName: default
+backend:
+  deployment:
+    name: backend
+    replicas: 1
+    appLabel: backend
+    additionalLabel: backend123
+    containerName: backend
+    image: jagannathgawali7/elaundry-backend:dev-18-11-2024
+    imagePullPolicy: Always
+    containerPort: 3000
+  service:
+    name: backend-service
+    appLabel: backend
+    port: 3000
+    targetPort: 3000
+    type: NodePort
+  env:
+    dbHost: mysql
+    dbUser: root
+    dbPassword: rootpassword
+    dbName: mydatabase
+
+mysql:
+  deployment:
+    name: mysql
+    appLabel: mysql
+    containerName: mysql
+    image: mysql:8.0
+    containerPort: 3306
+  service:
+    name: mysql
+    appLabel: mysql
+    port: 3306
+    targetPort: 3306
+  env:
+    rootPassword: rootpassword
+    database: mydatabase
+  pv:
+    name: mysql-pv
+    capacity: 1Gi
+    accessMode: ReadWriteOnce
+    path: /mnt/data
+  pvc:
+    name: mysql-pvc
+    storageRequest: 1Gi
+    accessMode: ReadWriteOnce
+  initJob:
+    name: mysql-init
+    containerName: mysql-init
+    image: mysql:5.7
+
+ingress:
+  ui:
+    name: app-ingress-ui
+    host: myapp.local
+    serviceName: frontend-service
+    servicePort: 80
+    ingressClass: nginx
+  backend:
+    name: app-ingress
+    host: myapp.local
+    serviceName: backend-service
+    servicePort: 3000
+
+frontend:
+  deployment:
+    name: frontend
+    replicas: 2
+    appLabel: frontend
+    additionalLabel: frontend123
+    containerName: frontend
+    image: jagannathgawali7/elaundry-web:dev-17-11-2024
+    containerPort: 80
+  service:
+    name: frontend-service
+    appLabel: frontend
+    port: 80
+    targetPort: 80
+    type: NodePort

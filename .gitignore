@@ -1,0 +1,8 @@
+/backend
+/ebs
+/local-node-app
+**/node_modules
+/pvc-minikube
+/myapp1
+/loopRequest
+/loopRequest
